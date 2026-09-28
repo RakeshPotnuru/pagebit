@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Pagebit",
+  "version": "0.1.0",
+  "description": "Capture an element, the visible area, or a full web page.",
+  "permissions": ["activeTab", "scripting", "debugger", "downloads"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Pagebit",
+    "default_popup": "popup.html"
+  }
+}
