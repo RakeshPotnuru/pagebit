@@ -22,3 +22,5 @@ strong, small { display: block; }
 strong { font-size: 13px; font-weight: 650; }
 small { margin-top: 2px; color: #68716c; font-size: 11px; }
 #status { min-height: 14px; margin: 12px 1px 0; color: #a13b2c; font-size: 11px; }
+.hint { margin: 10px 1px 0; color: #68716c; font-size: 11px; }
+[hidden] { display: none !important; }

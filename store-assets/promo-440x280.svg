@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="280" viewBox="0 0 440 280">
+  <rect width="440" height="280" fill="#176f5b"/>
+  <circle cx="425" cy="22" r="106" fill="#2c876d" opacity=".65"/>
+  <circle cx="393" cy="270" r="132" fill="#0d5c4b" opacity=".75"/>
+  <g transform="rotate(-7 31 32)">
+    <rect x="17" y="18" width="29" height="29" rx="7" fill="#fff"/>
+    <rect x="24" y="25" width="15" height="15" rx="2" fill="#176f5b"/>
+  </g>
+  <text x="59" y="40" fill="#fff" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="-.6">Pagebit</text>
+  <text x="25" y="112" fill="#fff" font-family="Arial, sans-serif" font-size="31" font-weight="700" letter-spacing="-1.3">Capture what</text>
+  <text x="25" y="148" fill="#fff" font-family="Arial, sans-serif" font-size="31" font-weight="700" letter-spacing="-1.3">you need.</text>
+  <text x="26" y="185" fill="#c8e7d9" font-family="Arial, sans-serif" font-size="13">Element  ·  Visible area  ·  Full page</text>
+  <g transform="translate(278 60) rotate(5 65 86)">
+    <rect x="-7" y="1" width="145" height="182" rx="13" fill="#064a3c" opacity=".35"/>
+    <rect x="0" y="0" width="135" height="177" rx="11" fill="#fff"/>
+    <path d="M0 11a11 11 0 0 1 11-11h113a11 11 0 0 1 11 11v17H0Z" fill="#f3f7f2"/>
+    <circle cx="14" cy="14" r="3" fill="#c1d2c9"/><circle cx="24" cy="14" r="3" fill="#c1d2c9"/><circle cx="34" cy="14" r="3" fill="#c1d2c9"/>
+    <rect x="16" y="42" width="63" height="8" rx="3" fill="#213b30"/>
+    <rect x="16" y="56" width="92" height="5" rx="2" fill="#cddbd0"/>
+    <rect x="16" y="76" width="103" height="68" rx="6" fill="#e5f1e6" stroke="#b5d0bc"/>
+    <circle cx="94" cy="94" r="9" fill="#fff7d5"/>
+    <path d="M19 136c19-29 46-27 65-8 13-10 23-10 32-6v19H19Z" fill="#8fbca2"/>
+    <rect x="12" y="72" width="111" height="76" rx="8" fill="none" stroke="#176f5b" stroke-width="2"/>
+    <rect x="16" y="156" width="81" height="5" rx="2" fill="#d1ddd3"/>
+  </g>
+  <rect x="25" y="216" width="75" height="2" rx="1" fill="#76b49b"/>
+</svg>

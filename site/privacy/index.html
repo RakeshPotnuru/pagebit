@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f8f5">
+    <meta name="description" content="How the Pagebit Chrome extension handles screenshots, page content, and local storage.">
+    <link rel="canonical" href="https://pagebit.publishstudio.one/privacy/">
+    <link rel="icon" href="../assets/pagebit.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Privacy policy | Pagebit</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../" aria-label="Pagebit home">
+        <img src="../assets/pagebit.svg" alt="" width="36" height="36">
+        <span>Pagebit</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="../#how-it-works">How it works</a>
+        <a href="./" aria-current="page">Privacy</a>
+      </nav>
+    </header>
+
+    <main class="policy-layout">
+      <div class="policy-heading">
+        <h1>Privacy policy.</h1>
+        <p>Pagebit is a Chrome extension that captures an element, the visible area, or a full web page as a PNG. This policy explains what it accesses and where your captures go.</p>
+        <span class="policy-date">Effective 30 September 2026</span>
+      </div>
+
+      <div class="policy-content">
+        <section aria-labelledby="access"><h2 id="access">What Pagebit accesses</h2><p>When you use Pagebit on a tab, it accesses that page's visible content to create the screenshot you requested. Element and full page capture can temporarily inspect or scroll the page. Pagebit also uses the page title to suggest a PNG filename.</p><p>The extension requests Chrome's <code>activeTab</code> and <code>scripting</code> permissions to work on the tab after you invoke it. It requests <code>downloads</code> to save a PNG when you click Download and <code>clipboardWrite</code> to copy one when you click Copy.</p></section>
+
+        <section aria-labelledby="storage"><h2 id="storage">Where screenshots are stored</h2><p>Pagebit processes screenshots in your browser and stores the PNG, suggested filename, and capture time in the extension's local IndexedDB so it can open the preview tab. Pagebit does not upload screenshots or page content to a Pagebit server.</p><p>Click Delete or close the preview tab to remove Pagebit's stored PNG. If a close event is missed, Pagebit removes captures older than 24 hours on the next capture. On each new capture it also keeps no more than 20 captures or 100 MB in local storage. These limits are checked when a capture is saved, not continuously.</p><p>A PNG you download or copy is outside Pagebit's storage. Delete downloaded files or clipboard content using your device's controls.</p></section>
+
+        <section aria-labelledby="use"><h2 id="use">How the data is used</h2><p>Pagebit uses access to website content only to create screenshots you request and show them to you. We do not use screenshot or page content for advertising, profiling, or analytics. We do not sell it or transfer it to third parties. Pagebit staff cannot access captures through the extension. You decide whether to copy, download, or share a screenshot, including whether to send one to support.</p></section>
+
+        <section aria-labelledby="website"><h2 id="website">This website and support</h2><p>The website at <a href="https://pagebit.publishstudio.one/">pagebit.publishstudio.one</a> contains no analytics or tracking scripts and does not set cookies in its code. The hosting provider may process standard access logs when you visit. If you email support, we receive the address and information you send and use them to respond to your request. Email providers process messages for delivery.</p></section>
+
+        <section aria-labelledby="changes"><h2 id="changes">Changes and contact</h2><p>We will update this page and its effective date if Pagebit's data practices change. For privacy questions or requests about support correspondence, email <a href="mailto:support@publishstudio.one">support@publishstudio.one</a>.</p></section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span>© 2026 Pagebit</span>
+      <div><a href="../">Home</a><a href="mailto:support@publishstudio.one">support@publishstudio.one</a></div>
+    </footer>
+  </body>
+</html>
