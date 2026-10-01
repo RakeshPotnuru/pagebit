@@ -1,0 +1,11 @@
+{
+  "scripts" : [
+    {
+      "command" : "bash release.sh",
+      "directory" : "",
+      "id" : "AE4BA853-F392-438E-A815-3C15E4FB3E04",
+      "name" : "Release ZIP"
+    }
+  ],
+  "version" : 1
+}

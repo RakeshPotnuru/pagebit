@@ -18,3 +18,7 @@ Each capture opens in a new tab with a fitted preview. Use Download to save the 
 - `clipboardWrite` copies a PNG when you choose Copy.
 
 Element selection works in the main document. Tall elements and full pages are captured in sections, waiting for visible images and animations before stitching the PNG. Keep the tab active until capture finishes. The toolbar badge shows progress. Click the extension icon again to exit selection or stop a capture. Pagebit restores the original page and nested scroll positions. Elements already fully visible, including dialogs, are captured without scrolling. Elements inside ordinary scrolling containers can be captured across their scrollable area. Complex clipping layouts and cross-origin frames remain limited. Scroll-linked animations are captured at each viewport position, so their poses and seams can differ from a static page. Chrome restricts script injection on some internal pages, including `chrome://extensions`.
+
+## Package an update
+
+Run `bash release.sh` in a terminal and choose `1` for major, `2` for minor, or `3` for patch at the prompt. It updates `manifest.json` and writes `release/pagebit-<version>.zip` with only the extension files. To package the current version without changing it, run `python3 package.py`. Upload the ZIP as the new package in the Chrome Web Store dashboard.
