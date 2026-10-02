@@ -1,0 +1,14 @@
+{
+  "name": "pagebit",
+  "version": "0.1.1",
+  "private": true,
+  "license": "MIT",
+  "description": "Chrome extension for capturing web pages as PNGs",
+  "scripts": {
+    "test": "node --test background.test.js capture.browser.test.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.63.0",
+    "sharp": "^0.35.5"
+  }
+}

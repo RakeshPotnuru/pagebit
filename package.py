@@ -9,6 +9,7 @@ from zipfile import ZIP_DEFLATED, ZipFile
 root = Path(__file__).resolve().parent
 version = json.loads((root / "manifest.json").read_text())["version"]
 files = [
+    "LICENSE",
     "manifest.json",
     "background.js",
     "capture-page.js",

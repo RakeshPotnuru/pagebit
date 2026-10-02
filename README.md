@@ -2,6 +2,8 @@
 
 Pagebit is a Chrome extension for capturing a selected element, the visible area, or a full web page as a PNG.
 
+[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/imfnpdoblfnacegdlnamflmelmeanoon)
+
 ## Load it in Chrome
 
 1. Open `chrome://extensions`.
@@ -22,3 +24,13 @@ Element selection works in the main document. Tall elements and full pages are c
 ## Package an update
 
 Run `bash release.sh` in a terminal and choose `1` for major, `2` for minor, or `3` for patch at the prompt. It updates `manifest.json` and writes `release/pagebit-<version>.zip` with only the extension files. To package the current version without changing it, run `python3 package.py`. Upload the ZIP as the new package in the Chrome Web Store dashboard.
+
+## Contribute
+
+Pagebit uses plain JavaScript, HTML, and CSS. It has no build step. To work on it, install Node.js 24, run `npm ci` and `npx playwright install chromium`, then run `npm test`. The browser tests launch a temporary copy of the extension. See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+
+Report bugs and request features in [GitHub issues](https://github.com/RakeshPotnuru/pagebit/issues). For a vulnerability, follow [SECURITY.md](SECURITY.md). The [privacy policy](https://pagebit.publishstudio.one/privacy/) explains what the extension stores on your device.
+
+## License
+
+Pagebit is available under the [MIT License](LICENSE).
