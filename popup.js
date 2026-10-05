@@ -37,8 +37,8 @@ for (const button of buttons) {
       if (!tab?.id) throw new Error("No active tab found.");
 
       const mode = button.dataset.mode;
-      if (mode === "element") {
-        await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["select-element.js"] });
+      if (mode === "element" || mode === "area") {
+        await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: [mode === "area" ? "select-area.js" : "select-element.js"] });
         window.close();
         return;
       }

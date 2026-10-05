@@ -13,7 +13,10 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .mark { width: 26px; height: 26px; border: 6px solid #176f5b; border-radius: 7px; transform: rotate(-7deg); }
 button { padding: 8px 14px; border: 1px solid #dfe5dd; border-radius: 8px; background: #fff; color: inherit; font: inherit; font-size: 13px; cursor: pointer; }
 button:hover, button:focus-visible { border-color: #176f5b; background: #f2f9f5; outline: none; }
-button:disabled { opacity: .5; cursor: wait; }
+button:disabled { opacity: .5; cursor: default; }
+button[aria-busy="true"] { cursor: progress; }
+button[data-feedback="success"] { border-color: #176f5b; background: #f2f9f5; color: #176f5b; }
+button[data-feedback="error"] { border-color: #a13b2c; background: #fff4f1; color: #a13b2c; }
 main { min-height: calc(100vh - 59px); padding: 24px; text-align: center; }
 #status { margin: 0 0 16px; color: #68716c; font-size: 13px; }
 #image { max-width: 100%; max-height: calc(100vh - 150px); width: auto; height: auto; object-fit: contain; border: 1px solid #dfe5dd; background: white; box-shadow: 0 8px 28px #20252712; }

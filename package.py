@@ -21,6 +21,7 @@ files = [
     "preview.css",
     "preview.js",
     "select-element.js",
+    "select-area.js",
     "icons/icon-16.png",
     "icons/icon-32.png",
     "icons/icon-48.png",

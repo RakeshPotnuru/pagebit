@@ -68,12 +68,18 @@ async function captureFixture(mode, setup, clickSelection = false, deviceScaleFa
   }
   const tabId = await worker.evaluate(async url => (await chrome.tabs.query({ url: `${url}/*` })).at(-1).id, url);
   if (clickSelection) {
-    await worker.evaluate(async tabId => {
-      await chrome.scripting.executeScript({ target:{tabId}, files:['select-element.js'] });
-    }, tabId);
+    await worker.evaluate(async ({tabId,mode}) => {
+      await chrome.scripting.executeScript({ target:{tabId}, files:[mode === 'area' ? 'select-area.js' : 'select-element.js'] });
+    }, {tabId,mode});
     const preview = context.waitForEvent('page');
     await page.mouse.move(480,280);
-    await page.mouse.click(480,280);
+    if (mode === 'area') {
+      await page.mouse.down();
+      await page.mouse.move(230,130, { steps:5 });
+      await page.mouse.up();
+    } else {
+      await page.mouse.click(480,280);
+    }
     await preview;
   } else {
     await worker.evaluate(async ({tabId,mode}) => {
@@ -104,6 +110,8 @@ async function captureFixture(mode, setup, clickSelection = false, deviceScaleFa
     await preview.locator('#copy').click();
     await preview.waitForFunction(() => document.querySelector('#status').textContent !== 'Screenshot preview', null, { timeout:5000 });
     assert.equal(await preview.locator('#status').innerText(), 'Copied to clipboard.');
+    assert.equal(await preview.locator('#copy').innerText(), 'Copied');
+    assert.equal(await preview.locator('#copy').getAttribute('data-feedback'), 'success');
     await preview.evaluate(() => {
       const download = chrome.downloads.download.bind(chrome.downloads);
       chrome.downloads.download = options => { window.downloadOptions = options; return download(options); };
@@ -112,6 +120,8 @@ async function captureFixture(mode, setup, clickSelection = false, deviceScaleFa
     await preview.locator('#download').click();
     const download = await completed;
     await preview.waitForFunction(() => document.querySelector('#status').textContent === 'Download started.');
+    assert.equal(await preview.locator('#download').innerText(), 'Started');
+    assert.equal(await preview.locator('#download').getAttribute('data-feedback'), 'success');
     const options = await preview.evaluate(() => window.downloadOptions);
     assert.equal(options.filename.includes('/'), false);
     assert.match(options.filename, /-visible-.*\.png$/);
@@ -156,6 +166,72 @@ test('a fixed dialog on a scrolled page is captured at its visible location', as
   assert.equal(result.metadata.height,250);
   assert.deepEqual(await result.pixel(160,180), [0,170,170]);
   assert.equal(result.restored.y,650);
+});
+
+for (const scale of [1,2]) {
+  test(`selected area preserves a reverse drag on a scrolled page with emulated scale ${scale}`, async () => {
+    const result = await captureFixture('area', () => {
+      document.querySelector('#modal').style.display = 'block';
+      scrollTo(0,650);
+      window.pointerDown = 0;
+      window.addEventListener('pointerdown', () => window.pointerDown++);
+      window.addEventListener('click', () => window.pointerDown++);
+    }, true, scale);
+    // Chrome's visible-tab bitmap stays at native resolution under CDP emulation.
+    assert.equal(result.metadata.width,250);
+    assert.equal(result.metadata.height,150);
+    assert.deepEqual(await result.pixel(120,70), [0,170,170]);
+    assert.equal(result.restored.y,650);
+    assert.equal(result.restored.pointerDown,0);
+  });
+}
+
+test('area selection cancels with the toolbar and ignores Escape and an empty click', async () => {
+  const page = await context.newPage();
+  try {
+    await page.goto(url);
+    const tabId = await worker.evaluate(async url => (await chrome.tabs.query({ url:`${url}/*` })).at(-1).id, url);
+    const select = () => worker.evaluate(async tabId => {
+      await chrome.scripting.executeScript({ target:{tabId}, files:['select-area.js'] });
+    }, tabId);
+    await select();
+    await page.mouse.click(400,300);
+    assert.equal(await page.locator('[popover]').count(),1);
+    assert.equal(await worker.evaluate(() => captureState === null),true);
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('[popover]').count(),1);
+    await openAction(page);
+    assert.equal(await page.locator('[popover]').count(),0);
+    await page.evaluate(() => {
+      window.clicked = false;
+      window.addEventListener('click', () => { window.clicked = true; });
+    });
+    await page.mouse.click(400,300);
+    assert.equal(await page.evaluate(() => window.clicked),true);
+  } finally {
+    await page.close();
+  }
+});
+
+test('area capture rejects rectangles outside the viewport and releases its lock', async () => {
+  const page = await context.newPage();
+  try {
+    await page.goto(url);
+    const tabId = await worker.evaluate(async url => (await chrome.tabs.query({ url:`${url}/*` })).at(-1).id, url);
+    const errors = await worker.evaluate(async tabId => {
+      const errors = [];
+      for (const rect of [undefined, {left:-1,top:0,width:10,height:10},
+        {left:0,top:0,width:900,height:10}, {left:0,top:0,width:0,height:10}]) {
+        try { await capture(tabId,'area',rect); }
+        catch (error) { errors.push(error.message); }
+      }
+      return errors;
+    }, tabId);
+    assert.equal(errors.length,4);
+    for (const error of errors) assert.match(error,/Select an area inside the visible page/);
+  } finally {
+    await page.close();
+  }
 });
 
 test('full page captures sections revealed by scrolling and restores the initial scroll', async () => {
@@ -372,10 +448,27 @@ test('Delete removes the screenshot and disables preview actions', async () => {
   const preview=await context.newPage();
   await preview.goto(`chrome-extension://${new URL(worker.url()).host}/preview.html?id=${id}`);
   await preview.waitForFunction(() => !document.querySelector('#image').hidden);
+  await preview.evaluate(() => {
+    window.originalDeleteCapture = deleteCapture;
+    deleteCapture = () => new Promise((_resolve,reject) => { window.rejectDelete = reject; });
+  });
+  await preview.locator('#delete').click();
+  assert.equal(await preview.locator('#delete').innerText(),'Deleting...');
+  assert.equal(await preview.locator('#delete').getAttribute('aria-busy'),'true');
+  for (const id of ['download','copy','delete']) assert.equal(await preview.locator(`#${id}`).isDisabled(),true);
+  await preview.evaluate(() => window.rejectDelete(new Error('Deletion failed. Please retry.')));
+  await preview.waitForFunction(() => document.querySelector('#delete').textContent === 'Try again');
+  assert.equal(await preview.locator('#delete').getAttribute('data-feedback'),'error');
+  assert.equal(await preview.locator('#delete').isDisabled(),false);
+  assert.equal(await preview.locator('#image').isVisible(),true);
+  assert.equal(await preview.locator('#status').innerText(),'Deletion failed. Please retry.');
+  await preview.evaluate(() => { deleteCapture = window.originalDeleteCapture; });
   await preview.locator('#delete').click();
   await preview.waitForFunction(() => document.querySelector('#status').textContent === 'Screenshot deleted.');
   assert.equal(await preview.locator('#download').isDisabled(),true);
   assert.equal(await preview.locator('#copy').isDisabled(),true);
+  assert.equal(await preview.locator('#delete').innerText(),'Deleted');
+  assert.equal(await preview.locator('#delete').isDisabled(),true);
   assert.equal(await worker.evaluate(async id => await getCapture(id),id),undefined);
   await preview.close();
 });

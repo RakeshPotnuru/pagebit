@@ -33,6 +33,8 @@
         clip.right = Math.min(clip.right, bounds.left + parent.clientLeft + parent.clientWidth);
         clip.bottom = Math.min(clip.bottom, bounds.top + parent.clientTop + parent.clientHeight);
       }
+    } else if (state.mode === 'area') {
+      rect = state.rect;
     } else if (state.mode === 'full') {
       rect = { left:-scrollX, top:-scrollY, ...pageSize() };
     } else {
@@ -64,6 +66,15 @@
     if (request.action === 'restore') { restore(); return; }
     if (request.action === 'prepare') {
       if (state) restore();
+      if (request.mode === 'area') {
+        const r = request.rect;
+        if (!r || ![r.left, r.top, r.width, r.height].every(Number.isFinite) ||
+            r.left < 0 || r.top < 0 || r.width < 1 || r.height < 1 ||
+            r.left + r.width > document.documentElement.clientWidth ||
+            r.top + r.height > document.documentElement.clientHeight) {
+          throw new Error('Select an area inside the visible page before capturing.');
+        }
+      }
       const style = document.createElement('style');
       // Keep scrollbar space and the page layout unchanged while hiding its paint.
       style.textContent = `html, body { scroll-behavior:auto !important; scroll-snap-type:none !important; overflow-anchor:none !important; }
@@ -75,7 +86,7 @@
       const parents = request.mode === 'element' && element ? scrollParents(element) : [];
       let wake;
       const cancelSignal = new Promise(resolve => { wake = resolve; });
-      state = { mode:request.mode, x:scrollX, y:scrollY, element, style, hidden:[], stickyStyles:[],
+      state = { mode:request.mode, rect:request.rect, x:scrollX, y:scrollY, element, style, hidden:[], stickyStyles:[],
         scrollParents:parents, originalParentScroll:parents.map(parent => [parent, parent.scrollLeft, parent.scrollTop]),
         cancelSignal, cancelled:false, cancel:() => { state.cancelled = true; wake(); } };
       document.documentElement.append(style);

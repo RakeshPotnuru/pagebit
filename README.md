@@ -1,6 +1,6 @@
 # Pagebit
 
-Pagebit is a Chrome extension for capturing a selected element, the visible area, or a full web page as a PNG.
+Pagebit is a Chrome extension for capturing a selected area, a selected element, the visible area, or a full web page as a PNG.
 
 [Install from the Chrome Web Store](https://chromewebstore.google.com/detail/imfnpdoblfnacegdlnamflmelmeanoon)
 
@@ -12,6 +12,8 @@ Pagebit is a Chrome extension for capturing a selected element, the visible area
 4. Pin Pagebit, open a web page, and click its toolbar button.
 
 Each capture opens in a new tab with a fitted preview. Use Download to save the PNG in `Downloads`, Copy to put it on the clipboard, or Delete to discard it. Pagebit removes its stored PNG when the preview tab closes. On each new capture it removes stored screenshots older than 24 hours and keeps at most 20 files or 100 MB. Downloads and clipboard copies remain under your control. Captures stay on your computer. Pagebit hides page scrollbars during capture and restores them afterward.
+
+Choose Selected area and drag a rectangle on the visible page. Release to open its PNG preview. Click the extension icon again to cancel selection.
 
 ## Permissions
 

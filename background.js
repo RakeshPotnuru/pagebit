@@ -25,19 +25,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
     return;
   }
-  if (message?.type !== "capture" && message?.type !== "captureElement") return;
-  const tabId = message.type === "captureElement" ? sender.tab?.id : message.tabId;
-  const mode = message.type === "captureElement" ? "element" : message.mode;
-  capture(tabId, mode)
+  if (!["capture", "captureElement", "captureArea"].includes(message?.type)) return;
+  const tabId = message.type === "capture" ? message.tabId : sender.tab?.id;
+  const mode = message.type === "captureArea" ? "area" : message.type === "captureElement" ? "element" : message.mode;
+  capture(tabId, mode, message.rect)
     .then(() => sendResponse({ ok: true }))
     .catch(error => sendResponse({ ok: false, error: error.message }));
   return true;
 });
 
-async function capture(tabId, mode) {
+async function capture(tabId, mode, rect) {
   if (captureState) throw new Error("A screenshot is already being captured.");
   if (!tabId) throw new Error("No active tab found.");
-  if (!["visible", "full", "element"].includes(mode)) throw new Error("Unknown capture mode.");
+  if (!["visible", "full", "element", "area"].includes(mode)) throw new Error("Unknown capture mode.");
   const state = { tabId, count: 0, total: 1, cancelled: false };
   captureState = state;
   const checkCancelled = () => {
@@ -66,7 +66,7 @@ async function capture(tabId, mode) {
     const tab = await chrome.tabs.get(tabId);
     await chrome.scripting.executeScript({ target: { tabId }, files: ["capture-page.js"] });
     prepared = true;
-    await page({ action: "prepare", mode });
+    await page({ action: "prepare", mode, rect });
     let canvas, scaleX, scaleY;
     let offsetY = 0;
     let count = 0;
