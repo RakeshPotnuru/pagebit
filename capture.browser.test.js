@@ -124,6 +124,8 @@ async function captureFixture(mode, setup, clickSelection = false, deviceScaleFa
     assert.equal(await preview.locator('#download').getAttribute('data-feedback'), 'success');
     const options = await preview.evaluate(() => window.downloadOptions);
     assert.equal(options.filename.includes('/'), false);
+    assert.equal(options.filename.includes('\\'), false);
+    assert.equal(options.saveAs, true);
     assert.match(options.filename, /-visible-.*\.png$/);
     assert.deepEqual(await fs.readFile(await download.path()), png);
 

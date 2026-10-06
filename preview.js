@@ -56,7 +56,8 @@ async function loadPreview() {
       runAction(downloadButton, "Starting...", "Started", "Download failed.", async () => {
         await chrome.downloads.download({
           url: objectUrl,
-          filename: capture.filename.split("/").pop(),
+          filename: capture.filename.split(/[\\/]/).pop(),
+          saveAs: true,
           conflictAction: "uniquify"
         });
         status.textContent = "Download started.";
